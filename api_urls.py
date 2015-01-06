@@ -6,10 +6,10 @@ from __future__ import unicode_literals
 USERS = '/users'
 USER = USERS + '/<user_id>'
 
-NEWS = '/news'
-TWITTER = '/twitter'
+NEWS = USER + '/news'
+TWITTER = USER + '/twitter'
 
 PHOTOS = USER + '/photos'
 PHOTO = PHOTOS + '/<photo_id>'
 
-PUSH_NOTIFICATION = '/push'
+PUSH_NOTIFICATION = USER + '/push'
