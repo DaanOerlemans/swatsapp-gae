@@ -27,9 +27,8 @@ The request should be an *application/json* containing at least the real name, t
 | device_id | String  | The unique id of the users device |
 
 **Request**
-
 ```
-POST /users
+POST /users HTTP/1.1
 Content-Type: application/json
 
 {
@@ -37,3 +36,17 @@ Content-Type: application/json
     "device_id": "fe161d7d6c2532241f1e840ce57a5b77"
 }
 ```
+
+**Response**
+If the user was successfully created the response contains the created user.
+```
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+    "name": "Hans de Vries",
+    "device_id": "fe161d7d6c2532241f1e840ce57a5b77",
+    "photos": []
+}
+```
+
