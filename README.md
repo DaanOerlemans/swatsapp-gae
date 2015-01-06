@@ -17,7 +17,7 @@ Create a new user.
 
 `/users`
 
-The request should be an *application/json* containing at least the real name, the username and the password of the user.
+The request should be an *application/json* containing at least the real name and the unique device id of the user.
 
 **Input**
 
