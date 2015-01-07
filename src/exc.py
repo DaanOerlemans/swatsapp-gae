@@ -2,3 +2,10 @@
 
 from __future__ import absolute_import
 from __future__ import unicode_literals
+
+
+class DuplicateEntity(Exception):
+    """
+    Exception to raise when trying to create a duplicate entity.
+
+    """

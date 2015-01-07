@@ -13,13 +13,19 @@ from src.dal import repositories
 
 # Overriding default routes.
 handlers = [
+    (api_urls.USERS, handlers.UsersHandler)
 ]
 
 routes = [RedirectRoute(url, handler, url, strict_slash=True)
           for url, handler in handlers]
 
 # WSGI application configuration.
-config = {'bd': {}}
+config = {'sa': {}}
+
+# Manage service class dependency injection.
+config['sa']['user_service'] = services.UserService(
+    repositories.UserRepository()
+)
 
 
 class SwatsAppWSGIApplication(webapp2.WSGIApplication):

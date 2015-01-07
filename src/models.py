@@ -17,14 +17,22 @@ class User(ndb.Model):
     Class to represent a user.
 
     """
-    # The phone number of the user.
-    phonenumber = ndb.StringProperty(required=True)
+    # The name of the user.
+    name = ndb.StringProperty(required=True)
 
-    # The email address of the user.
-    email = ndb.StringProperty(required=True)
+    # The device id of the user.
+    device_id = ndb.StringProperty(required=True)
 
-    # The password of the user, encrypted.
-    password = ndb.StringProperty(required=True)
+    # List of photos the user made.
+    photos = ndb.KeyProperty(kind='Photo', repeated=True)
 
     # Timestamp of creation.
     created = ndb.DateTimeProperty(auto_now_add=True)
+
+
+class Photo(ndb.Model):
+    """
+    Class to represent a photo.
+
+    """
+    image = ndb.BlobProperty()
