@@ -46,3 +46,23 @@ def photo_to_dict(photo, url):
         'url': url,
         'created': photo.created.strftime('%Y-%m-%dT%H:%M:%SZ')
     }
+
+
+def news_to_dict(news_item):
+    """
+    Convert a news object to dict format that can be returned through a
+    json.dumps() response.
+
+    Args:
+        news_item: The news item to convert to dict.
+
+    Returns:
+        The dict representation of the given news_item.
+
+    """
+    return {
+        'poster':  news_item.poster,
+        'message': news_item.message,
+        'image_url': news_item.image_url,
+        # 'created': news_item.created.strftime('%Y-%m-%dT%H:%M:%SZ')
+    }

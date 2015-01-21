@@ -75,7 +75,7 @@ class PhotoRepository(object):
         return photo
 
 
-class NewsRepository(object):
+class NewsItemRepository(object):
     """
     Repository that handles storage and retrieval of models.News objects
     in and from the datastore.

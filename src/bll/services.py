@@ -76,7 +76,7 @@ class PhotoService(object):
         return self.photo_repo.create(photo, user)
 
 
-class NewsService(object):
+class NewsItemService(object):
     """
     Service class that connects the presentation layer to the domain.
 

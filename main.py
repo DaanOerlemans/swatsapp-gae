@@ -13,7 +13,8 @@ from src.dal import repositories
 
 # Overriding default routes.
 handlers = [
-    (api_urls.USERS, handlers.UsersHandler)
+    (api_urls.USERS, handlers.UsersHandler),
+    (api_urls.NEWS, handlers.NewsItemHandler)
 ]
 
 routes = [RedirectRoute(url, handler, url, strict_slash=True)
@@ -29,8 +30,8 @@ config['sa']['user_service'] = services.UserService(
 config['sa']['photo_service'] = services.PhotoService(
     repositories.PhotoRepository()
 )
-config['sa']['news_service'] = services.NewsService(
-    repositories.NewsRepository()
+config['sa']['news_item_service'] = services.NewsItemService(
+    repositories.NewsItemRepository()
 )
 
 
