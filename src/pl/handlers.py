@@ -102,13 +102,13 @@ class NewsItemHandler(webapp2.RequestHandler):
     @returns('application/json')
     def get(self, user_id):
         """
-        Retrieve all accounts for a user.
+        Retrieve all news for a user.
 
         Args:
-            user_id: The id of user to retrieve the accounts for.
+            user_id: The id of user to retrieve the news for.
 
         Returns:
-            200 Ok and the JSON representation of all accounts for the user.
+            200 Ok and the JSON representation of all news for the user.
             404 Not Found: If the user was not found.
 
         """
