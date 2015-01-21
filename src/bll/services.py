@@ -74,3 +74,32 @@ class PhotoService(object):
 
         """
         return self.photo_repo.create(photo, user)
+
+
+class NewsService(object):
+    """
+    Service class that connects the presentation layer to the domain.
+
+    """
+    def __init__(self, news_repo):
+        """
+        Create a new instance.
+
+        Args:
+            news_repo: The NewsRepository to use.
+
+        """
+        self.news_repo = news_repo
+
+    def create(self, news):
+        """
+        Creates a new photo by calling the photo repository.
+
+        Args:
+            news: The news to create.
+
+        Returns:
+            The created news.
+
+        """
+        return self.news_repo.create(news)

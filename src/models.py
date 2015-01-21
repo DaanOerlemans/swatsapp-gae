@@ -40,3 +40,21 @@ class Photo(ndb.Model):
 
     # Timestamp of creation.
     created = ndb.DateTimeProperty(auto_now_add=True)
+
+
+class News(ndb.Model):
+    """
+    Class to represent a news item.
+
+    """
+    # The poster of the news item.
+    poster = ndb.StringProperty(required=True)
+
+    # The message of the news item.
+    message = ndb.StringProperty(required=True)
+
+    # The image url posted with the news item
+    image_url = ndb.StringProperty()
+
+    # Timestamp of creation.
+    created = ndb.DateTimeProperty(auto_now_add=True)

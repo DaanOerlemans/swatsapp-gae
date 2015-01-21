@@ -29,6 +29,9 @@ config['sa']['user_service'] = services.UserService(
 config['sa']['photo_service'] = services.PhotoService(
     repositories.PhotoRepository()
 )
+config['sa']['news_service'] = services.NewsService(
+    repositories.NewsRepository()
+)
 
 
 class SwatsAppWSGIApplication(webapp2.WSGIApplication):

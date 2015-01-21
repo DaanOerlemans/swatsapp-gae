@@ -73,3 +73,24 @@ class PhotoRepository(object):
         user.put()
         photo.put()
         return photo
+
+
+class NewsRepository(object):
+    """
+    Repository that handles storage and retrieval of models.News objects
+    in and from the datastore.
+
+    """
+    def create(self, news):
+        """
+        Create the given photo in the datastore if it doesn't exist yet.
+
+        Args:
+            news: The news to create.
+
+        Returns:
+            The created news.
+
+        """
+        news.put()
+        return news
