@@ -26,3 +26,23 @@ def user_to_dict(user):
         'id': user.key.id(),
         'created': user.created.strftime('%Y-%m-%dT%H:%M:%SZ')
     }
+
+
+def photo_to_dict(photo, url):
+    """
+    Convert a photo object to dict format that can be returned through a
+    json.dumps() response.
+
+    Args:
+        photo: The photo to convert to dict.
+        url: The url to get the photo.
+
+    Returns:
+        The dict representation of the given photo.
+
+    """
+    return {
+        'id':  photo.key.id(),
+        'url': url,
+        'created': photo.created.strftime('%Y-%m-%dT%H:%M:%SZ')
+    }

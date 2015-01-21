@@ -35,4 +35,8 @@ class Photo(ndb.Model):
     Class to represent a photo.
 
     """
-    image = ndb.BlobProperty()
+    # The photo image
+    image = ndb.BlobProperty(default=None)
+
+    # Timestamp of creation.
+    created = ndb.DateTimeProperty(auto_now_add=True)

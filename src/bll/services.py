@@ -3,8 +3,6 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-from src import exc
-
 
 class UserService(object):
     """
@@ -33,3 +31,46 @@ class UserService(object):
 
         """
         return self.user_repo.create(user)
+
+    def get_by_id(self, user_id):
+        """
+        Find a user by its unique id.
+
+        Args:
+            user_id: The id to get the user.
+
+        Returns:
+            The user if it was found, or None if it was not.
+
+        """
+        return self.user_repo.get_by_id(user_id)
+
+
+class PhotoService(object):
+    """
+    Service class that connects the presentation layer to the domain.
+
+    """
+    def __init__(self, photo_repo):
+        """
+        Create a new instance.
+
+        Args:
+            photo_repo: The PhotoRepository to use.
+
+        """
+        self.photo_repo = photo_repo
+
+    def create(self, photo, user):
+        """
+        Creates a new photo by calling the photo repository.
+
+        Args:
+            photo: The photo to create.
+            user: The user to assign the photo to.
+
+        Returns:
+            The created photo.
+
+        """
+        return self.photo_repo.create(photo, user)
