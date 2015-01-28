@@ -4,8 +4,8 @@ from __future__ import unicode_literals
 import httplib
 
 import webapp2
-import feedparser
-import re
+import oauth2 as oauth
+import json
 
 import api_urls
 from src import models
@@ -86,6 +86,8 @@ class NewsItemHandler(webapp2.RequestHandler):
     Serves as base class for NewsItemsHandler.
 
     """
+    url = api_urls.NEWS
+
     news_item_service = None
 
     def initialize(self, request, response):
@@ -100,7 +102,7 @@ class NewsItemHandler(webapp2.RequestHandler):
         self.news_item_service = config['news_item_service']
 
     @returns('application/json')
-    def get(self, user_id):
+    def get(self):
         """
         Retrieve all news for a user.
 
@@ -112,25 +114,28 @@ class NewsItemHandler(webapp2.RequestHandler):
             404 Not Found: If the user was not found.
 
         """
-        print user_id
-        feed = 'https://twitrss.me/twitter_user_to_rss/?user=vcdeswatsers&replies=on'
-        d = feedparser.parse(feed)
+        consumer = oauth.Consumer(key="z0oq1oiNDWC1x6jDHpYiVYhFD", secret="hfPuWcPf48XfhkfhaKs4jGFGNqgezCGUiJ0YEggjT03AWMALcX")
+        token = oauth.Token(key="2990304898-hZ9gmp9YoQdnKuPQJNYeDgc7tea9HztPUnn43YM", secret="J1tahrQahs7966LzqXvTH5ch9jHFVsLnuVPyMz22JzwhH")
+        client = oauth.Client(consumer, token)
+        urls = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=vcdeswatsers"
+        resp, content = client.request(urls)
+
         news_items = []
-        for entry in d['entries']:
-            poster = 'Not found'
-            image_url = ''
-            for word in entry.title.split(' '):
-                if word.startswith('@') and word.endswith(':'):
-                    poster = re.sub('[^A-Za-z0-9]+', '', word)
-                if word.startswith('pic.twitter.com/'):
-                    image_url = word
+        decoded_twitter_stream = json.loads(content)
+        for tweet in decoded_twitter_stream:
+            user = tweet['user']['screen_name']
+            profile_image = tweet['user']['profile_image_url']
+            if 'retweeted_status' in tweet:
+                retweet_item = tweet['retweeted_status']
+                user = retweet_item['user']['screen_name']
+                profile_image = retweet_item['user']['profile_image_url']
             news_item = models.News(
-                poster=poster,
-                message=entry.description,
-                image_url=image_url
+                poster=user,
+                poster_profile_picture=profile_image,
+                message=tweet['text']
             )
+            if 'media' in tweet['entities']:
+                news_item.image_url = tweet['entities']['media'][0]['media_url']
             news_items.append(news_item)
 
-        return httplib.OK, {
-            'news': [convert_utils.news_to_dict(news_item) for news_item in news_items]
-        }
+        return httplib.OK, [convert_utils.news_to_dict(news_item) for news_item in news_items]

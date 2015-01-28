@@ -51,4 +51,32 @@ Content-Type: application/json
     "photos": []
 }
 ```
+### Get news - GET
+
+Get al news from the backend.
+
+`/news`
+
+**Request**
+
+```
+GET /news HTTP/1.1
+```
+
+**Response**
+
+If the user was successfully created the response contains the created user.
+```
+HTTP/1.1 200 Ok
+Content-Type: application/json
+
+[
+	{
+		"poster": "guus_cloo",
+		"message": "RT @guus_cloo: Vanavond afterparty carnaval van @VcdeSwatsers #opemake",
+		"poster_profile_picture": "http://pbs.twimg.com/profile_images/378800000245307233/f0afc6e7cd43ccc841921a989013220c_normal.jpeg",
+		"image_url": null
+	}
+]
+```
 

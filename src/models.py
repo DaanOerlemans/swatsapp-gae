@@ -50,6 +50,9 @@ class News(ndb.Model):
     # The poster of the news item.
     poster = ndb.StringProperty(required=True)
 
+    # The poster of the news item.
+    poster_profile_picture = ndb.StringProperty(required=True)
+
     # The message of the news item.
     message = ndb.StringProperty(required=True)
 
