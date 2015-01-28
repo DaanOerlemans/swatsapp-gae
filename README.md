@@ -9,7 +9,7 @@ Here i will explain what calls can be made to the backend. This document will be
 
 **base url**
 
-`http://www.TBD.nl`
+`http://swatsapp-gae.appspot.com`
 
 ### Create user - POST
 
