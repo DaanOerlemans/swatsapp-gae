@@ -51,21 +51,47 @@ Content-Type: application/json
     "photos": []
 }
 ```
-### Get news - GET
+### Create news item - GET
 
-Get al news from the backend.
+Create a new news item.
 
-`/news`
+`/news_item`
 
 **Request**
 
 ```
-GET /news HTTP/1.1
+GET /news_item HTTP/1.1
 ```
 
 **Response**
 
-If the user was successfully created the response contains the created user.
+```
+<html>
+  <body >
+    <form action="/news_item" method="post">
+      <div><textarea name="content" rows="4" cols="60"></textarea></div>
+      Controleer goed op spelling, het bericht kun je niet meer verwijderen.
+      <div><input type="submit" value="Nieuwtje toevoegen"></div>
+    </form>
+  </body>
+</html>
+```
+Whatever you enter in this form will be added as an news item in the backend.
+
+### Get news - GET
+
+Get al news from the backend.
+
+`/news_items`
+
+**Request**
+
+```
+GET /news_items HTTP/1.1
+```
+
+**Response**
+
 ```
 HTTP/1.1 200 Ok
 Content-Type: application/json
