@@ -83,11 +83,9 @@ class UsersHandler(UserHandler):
 
 class NewsItemHandler(webapp2.RequestHandler):
     """
-    Serves as base class for NewsItemsHandler.
+    Serves as base class for NewsItemHandler.
 
     """
-    url = api_urls.NEWS
-
     news_item_service = None
 
     def initialize(self, request, response):
@@ -100,6 +98,51 @@ class NewsItemHandler(webapp2.RequestHandler):
         services = ['news_item_service']
         config = self.app.config.load_config('sa', required_keys=services)
         self.news_item_service = config['news_item_service']
+
+    def get(self):
+        main_page_html = """\
+        <html>
+          <body >
+            <form action="/news_item" method="post">
+              <div><textarea name="content" rows="4" cols="60"></textarea></div>
+              Controleer goed op spelling, het bericht kun je niet meer verwijderen.
+              <div><input type="submit" value="Nieuwtje toevoegen"></div>
+            </form>
+          </body>
+        </html>
+        """
+        self.response.write(main_page_html)
+
+    def post(self):
+        content = self.request.get('content')
+        if not content:
+            self.response.write('<html><body>Het bericht was leeg of null, probeer het opnieuw</body></html>')
+            return
+
+        news_item = models.News(
+            poster="VcdeSwatsers",
+            poster_profile_picture="http://pbs.twimg.com/profile_images/441298171869020161/EmepyFwW_normal.jpeg",
+            message=content
+        )
+
+        self.news_item_service.create(news_item)
+
+        self.response.write('<html><body>Het bericht is toegevoegd!</body></html>')
+
+
+class NewsItemsHandler(NewsItemHandler):
+    """
+    Serves as base class for NewsItemsHandler.
+
+    """
+
+    def initialize(self, request, response):
+        """
+        Initialize the handler and fetch the required services from
+        the current WSGI application's config.
+
+        """
+        webapp2.RequestHandler.initialize(self, request, response)
 
     @returns('application/json')
     def get(self):
@@ -136,6 +179,9 @@ class NewsItemHandler(webapp2.RequestHandler):
             )
             if 'media' in tweet['entities']:
                 news_item.image_url = tweet['entities']['media'][0]['media_url']
+            news_items.append(news_item)
+
+        for news_item in models.News().query().fetch():
             news_items.append(news_item)
 
         return httplib.OK, [convert_utils.news_to_dict(news_item) for news_item in news_items]

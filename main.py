@@ -14,7 +14,8 @@ from src.dal import repositories
 # Overriding default routes.
 handlers = [
     (api_urls.USERS, handlers.UsersHandler),
-    (api_urls.NEWS, handlers.NewsItemHandler)
+    (api_urls.NEWS_ITEMS, handlers.NewsItemsHandler),
+    (api_urls.NEWS_ITEM, handlers.NewsItemHandler)
 ]
 
 routes = [RedirectRoute(url, handler, url, strict_slash=True)
