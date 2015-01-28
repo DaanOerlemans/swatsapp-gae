@@ -75,7 +75,7 @@ Content-Type: application/json
 		"poster": "guus_cloo",
 		"message": "RT @guus_cloo: Vanavond afterparty carnaval van @VcdeSwatsers #opemake",
 		"poster_profile_picture": "http://pbs.twimg.com/profile_images/378800000245307233/f0afc6e7cd43ccc841921a989013220c_normal.jpeg",
-		"image_url": null
+		"image_url": "http://pbs.twimg.com/media/BhqzNYdIMAAXS7W.jpg"
 	}
 ]
 ```
