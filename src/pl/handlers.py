@@ -6,6 +6,7 @@ import httplib
 import webapp2
 import oauth2 as oauth
 import json
+import urllib
 
 import api_urls
 from src import models
@@ -157,14 +158,27 @@ class NewsItemsHandler(NewsItemHandler):
             404 Not Found: If the user was not found.
 
         """
-        consumer = oauth.Consumer(key="z0oq1oiNDWC1x6jDHpYiVYhFD", secret="hfPuWcPf48XfhkfhaKs4jGFGNqgezCGUiJ0YEggjT03AWMALcX")
-        token = oauth.Token(key="2990304898-hZ9gmp9YoQdnKuPQJNYeDgc7tea9HztPUnn43YM", secret="J1tahrQahs7966LzqXvTH5ch9jHFVsLnuVPyMz22JzwhH")
-        client = oauth.Client(consumer, token)
-        urls = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=vcdeswatsers"
-        resp, content = client.request(urls)
+        twitter_consumer = oauth.Consumer(key="SECRET", secret="SECRET")
+        twitter_token = oauth.Token(key="SECRET", secret="SECRET")
+        twitter_client = oauth.Client(twitter_consumer, twitter_token)
+        twitter_urls = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=vcdeswatsers"
+        facebook_urls = "https://graph.facebook.com/294635843882071/posts?access_token=SECRET&count=1"
+        resp, twitter_content = twitter_client.request(twitter_urls)
 
+        response = urllib.urlopen(facebook_urls)
         news_items = []
-        decoded_twitter_stream = json.loads(content)
+
+        decoded_facebook_stream = json.loads(response.read())
+        for post in decoded_facebook_stream['data']:
+            if 'message' in post:
+                news_item = models.News(
+                    poster=post['from']['name'],
+                    poster_profile_picture="http://graph.facebook.com/" + post['from']['id'] + "/picture?type=square",
+                    message=post['message']
+                )
+                news_items.append(news_item)
+
+        decoded_twitter_stream = json.loads(twitter_content)
         for tweet in decoded_twitter_stream:
             user = tweet['user']['screen_name']
             profile_image = tweet['user']['profile_image_url']

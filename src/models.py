@@ -54,7 +54,7 @@ class News(ndb.Model):
     poster_profile_picture = ndb.StringProperty(required=True)
 
     # The message of the news item.
-    message = ndb.StringProperty(required=True)
+    message = ndb.TextProperty(required=True)
 
     # The image url posted with the news item
     image_url = ndb.StringProperty()
