@@ -65,5 +65,5 @@ def news_to_dict(news_item):
         'poster_profile_picture':  news_item.poster_profile_picture,
         'message': news_item.message,
         'image_url': news_item.image_url,
-        # 'created': news_item.created.strftime('%Y-%m-%dT%H:%M:%SZ')
+        'created': news_item.created.strftime('%Y-%m-%dT%H:%M:%SZ')
     }

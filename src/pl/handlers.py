@@ -5,6 +5,7 @@ import httplib
 
 import webapp2
 import oauth2 as oauth
+from datetime import datetime
 import json
 import urllib
 
@@ -156,25 +157,24 @@ class NewsItemsHandler(NewsItemHandler):
         Returns:
             200 Ok and the JSON representation of all news for the user.
             404 Not Found: If the user was not found.
-
         """
-        twitter_consumer = oauth.Consumer(key="SECRET", secret="SECRET")
-        twitter_token = oauth.Token(key="SECRET", secret="SECRET")
+        twitter_consumer = oauth.Consumer(key="xoogZegdrf7hEtWOHSxh3CmIe", secret="ZbOThBxGOVdDmVJfpGQJM2arpb1WQBxZnsuuUzfiXKNhrkBiWO")
+        twitter_token = oauth.Token(key="2990304898-hZ9gmp9YoQdnKuPQJNYeDgc7tea9HztPUnn43YM", secret="J1tahrQahs7966LzqXvTH5ch9jHFVsLnuVPyMz22JzwhH")
         twitter_client = oauth.Client(twitter_consumer, twitter_token)
         twitter_urls = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=vcdeswatsers"
-        facebook_urls = "https://graph.facebook.com/294635843882071/posts?access_token=SECRET&count=1"
+        facebook_urls = "https://graph.facebook.com/294635843882071/posts?access_token=1596628193905576|2rgo0-gsW9WLHuVw7rpxe7dtVzw&count=1"
         resp, twitter_content = twitter_client.request(twitter_urls)
-
-        response = urllib.urlopen(facebook_urls)
         news_items = []
 
+        response = urllib.urlopen(facebook_urls)
         decoded_facebook_stream = json.loads(response.read())
         for post in decoded_facebook_stream['data']:
             if 'message' in post:
                 news_item = models.News(
                     poster=post['from']['name'],
                     poster_profile_picture="http://graph.facebook.com/" + post['from']['id'] + "/picture?type=square",
-                    message=post['message']
+                    message=post['message'],
+                    created=datetime.strptime(post['created_time'][:-5], "%Y-%m-%dT%H:%M:%S")
                 )
                 news_items.append(news_item)
 
@@ -182,14 +182,17 @@ class NewsItemsHandler(NewsItemHandler):
         for tweet in decoded_twitter_stream:
             user = tweet['user']['screen_name']
             profile_image = tweet['user']['profile_image_url']
+
             if 'retweeted_status' in tweet:
                 retweet_item = tweet['retweeted_status']
                 user = retweet_item['user']['screen_name']
                 profile_image = retweet_item['user']['profile_image_url']
+
             news_item = models.News(
                 poster=user,
                 poster_profile_picture=profile_image,
-                message=tweet['text']
+                message=tweet['text'],
+                created=datetime.strptime(tweet['created_at'][:-10]+tweet['created_at'][26:], "%a %b %d %H:%M:%S %Y")
             )
             if 'media' in tweet['entities']:
                 news_item.image_url = tweet['entities']['media'][0]['media_url']
