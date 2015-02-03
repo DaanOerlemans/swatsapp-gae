@@ -9,3 +9,10 @@ class DuplicateEntity(Exception):
     Exception to raise when trying to create a duplicate entity.
 
     """
+
+
+class NotFoundEntity(Exception):
+    """
+    Exception to raise when trying to create a not found entity.
+
+    """

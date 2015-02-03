@@ -75,6 +75,19 @@ class PhotoService(object):
         """
         return self.photo_repo.create(photo, user)
 
+    def get_by_id(self, photo_id):
+        """
+        Find a photo by its unique id.
+
+        Args:
+            photo_id: The id to get the photo.
+
+        Returns:
+            The photo if it was found, or None if it was not.
+
+        """
+        return self.photo_repo.get_by_id(photo_id)
+
 
 class NewsItemService(object):
     """

@@ -28,7 +28,7 @@ def user_to_dict(user):
     }
 
 
-def photo_to_dict(photo, url):
+def photo_to_dict(photo):
     """
     Convert a photo object to dict format that can be returned through a
     json.dumps() response.
@@ -43,7 +43,6 @@ def photo_to_dict(photo, url):
     """
     return {
         'id':  photo.key.id(),
-        'url': url,
         'created': photo.created.strftime('%Y-%m-%dT%H:%M:%SZ')
     }
 

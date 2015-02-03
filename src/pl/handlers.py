@@ -9,6 +9,9 @@ from datetime import datetime
 import json
 import urllib
 
+from google.appengine.ext.webapp import blobstore_handlers
+from google.appengine.api import images
+
 import api_urls
 from src import models
 from src import exc
@@ -158,11 +161,14 @@ class NewsItemsHandler(NewsItemHandler):
             200 Ok and the JSON representation of all news for the user.
             404 Not Found: If the user was not found.
         """
-        twitter_consumer = oauth.Consumer(key="xoogZegdrf7hEtWOHSxh3CmIe", secret="ZbOThBxGOVdDmVJfpGQJM2arpb1WQBxZnsuuUzfiXKNhrkBiWO")
-        twitter_token = oauth.Token(key="2990304898-hZ9gmp9YoQdnKuPQJNYeDgc7tea9HztPUnn43YM", secret="J1tahrQahs7966LzqXvTH5ch9jHFVsLnuVPyMz22JzwhH")
+        twitter_consumer = oauth.Consumer(key="xoogZegdrf7hEtWOHSxh3CmIe",
+                                          secret="ZbOThBxGOVdDmVJfpGQJM2arpb1WQBxZnsuuUzfiXKNhrkBiWO")
+        twitter_token = oauth.Token(key="2990304898-hZ9gmp9YoQdnKuPQJNYeDgc7tea9HztPUnn43YM",
+                                    secret="J1tahrQahs7966LzqXvTH5ch9jHFVsLnuVPyMz22JzwhH")
         twitter_client = oauth.Client(twitter_consumer, twitter_token)
         twitter_urls = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=vcdeswatsers"
-        facebook_urls = "https://graph.facebook.com/294635843882071/posts?access_token=1596628193905576|2rgo0-gsW9WLHuVw7rpxe7dtVzw&count=1"
+        facebook_urls = "https://graph.facebook.com/294635843882071/posts?access_token=1596628193905576|" \
+                        "2rgo0-gsW9WLHuVw7rpxe7dtVzw"
         resp, twitter_content = twitter_client.request(twitter_urls)
         news_items = []
 
@@ -202,3 +208,98 @@ class NewsItemsHandler(NewsItemHandler):
             news_items.append(news_item)
 
         return httplib.OK, [convert_utils.news_to_dict(news_item) for news_item in news_items]
+
+
+class PhotoHandler(blobstore_handlers.BlobstoreUploadHandler):
+    """
+    Serves as base class for UsersHandler.
+
+    """
+    user_service = None
+    photo_service = None
+
+    def initialize(self, request, response):
+
+        webapp2.RequestHandler.initialize(self, request, response)
+        services = ['photo_service']
+        config = self.app.config.load_config('sa', required_keys=services)
+        self.user_service = config['user_service']
+        self.photo_service = config['photo_service']
+
+    def get(self, user_id, photo_id):
+        """
+        Retrieve photo.
+
+        Args:
+            user_id: The id of photo to retrieve.
+
+        Returns:
+            200 Ok and the JSON representation of all news for the photo.
+            404 Not Found: If photo user was not found.
+        """
+        try:
+            photo = self.photo_service.get_by_id(int(photo_id))
+        except exc.NotFoundEntity:
+            return httplib.NOT_FOUND, {
+                'error': 'There already is an account for this device_id {}'.format(photo_id)
+            }
+        self.response.headers[str('Content-Type')] = str('image/jpeg')
+        self.response.out.write(photo.image)
+
+
+class PhotosHandler(PhotoHandler):
+    """
+    Handler for creating new photos.
+
+    """
+
+    @returns('application/json')
+    def post(self, user_id):
+        """
+        Create a new photo.
+
+        Keyword Args (via the request object):
+            image: The image created by the user.
+
+        Returns:
+            201 Ok and the created photo as JSON: If the request is valid and
+                creation was successful.
+            422 Unprocessable Entity and an error message: If the request is
+                invalid.
+
+        """
+        # Get the user.
+        try:
+            user = self.user_service.get_by_id(int(user_id))
+        except exc.NotFoundEntity:
+            return httplib.NOT_FOUND, {
+                'error': 'There already is an account for this device_id {}'.format(user_id)
+                }
+        # if not user:
+        #     return (httplib.NOT_FOUND, {
+        #         'error': 'User %d was not found' % user_id
+        #     })
+        avatar = self.request.get('img')
+        img = images.Image(avatar)
+        if img._height > img._width:
+            img.resize(width=800, height=1280)
+        elif img._height > img._width:
+            img.resize(width=1280, height=800)
+        else:
+            img.resize(width=1280, height=1280)
+        img.im_feeling_lucky()
+        thumbnail = img.execute_transforms(output_encoding=images.JPEG)
+        photo = models.Photo(
+            image=thumbnail,
+        )
+        try:
+            photo = self.photo_service.create(photo, user)
+        except exc.DuplicateEntity:
+            return httplib.CONFLICT, {
+                'error': 'There already is an account for this device_id {}'.format(user.device_id)
+                }
+
+        # If the user is created successfully.
+        # self.response.headers[str('Content-Type')] = str('image/jpeg')
+        # self.response.out.write(thumbnail)
+        return httplib.OK, convert_utils.photo_to_dict(photo)

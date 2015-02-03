@@ -48,7 +48,10 @@ class UserRepository(object):
             The user if it was found, or None if it was not.
 
         """
-        return models.User.get_by_id(user_id)
+        user = models.User.get_by_id(user_id)
+        if not user:
+            raise exc.NotFoundEntity()
+        return user
 
 
 class PhotoRepository(object):
@@ -69,9 +72,25 @@ class PhotoRepository(object):
             The created photo.
 
         """
+        photo.put()
         user.photos.append(photo.key)
         user.put()
-        photo.put()
+        return photo
+
+    def get_by_id(self, photo_id):
+        """
+        Find a user by its unique id.
+
+        Args:
+            user_id: The id to find the user for.
+
+        Returns:
+            The user if it was found, or None if it was not.
+
+        """
+        photo = models.Photo.get_by_id(photo_id)
+        if not photo:
+            raise exc.NotFoundEntity()
         return photo
 
 
