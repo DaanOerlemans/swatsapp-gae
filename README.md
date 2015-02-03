@@ -46,6 +46,7 @@ HTTP/1.1 201 Created
 Content-Type: application/json
 
 {
+	"id": 5700305828184064,
     "name": "Hans de Vries",
     "device_id": "fe161d7d6c2532241f1e840ce57a5b77",
     "photos": []
@@ -80,7 +81,7 @@ Whatever you enter in this form will be added as an news item in the backend.
 
 ### Get news - GET
 
-Get al news from the backend.
+Get all news from the backend.
 
 `/news_items`
 
@@ -106,3 +107,49 @@ Content-Type: application/json
 ]
 ```
 
+### Upload photo - POST
+
+Upload a photo.
+
+`/users/<user_id>/photos`
+
+The request should not have an Content-Type.
+
+**Input**
+
+| Name      | Type    | Description                       |
+| --------- | ------- | --------------------------------- |
+| img       | File    | The image you want to upload      |
+
+**Response**
+
+If the user was successfully created the response contains the created user.
+```
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+	"id": 5672749318012928,
+	"created": "2015-02-03T12:33:58Z"
+}
+```
+
+### Get photo - GET
+
+Get photo from the backend by it's unique id.
+
+`/users/<user_id>/photos/<photo_id>`
+
+**Request**
+
+```
+GET /users/<user_id>/photos/<photo_id> HTTP/1.1
+```
+
+**Response**
+
+```
+HTTP/1.1 200 Ok
+Content-Type: image/jpeg
+<the image file>
+```
