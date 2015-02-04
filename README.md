@@ -52,6 +52,34 @@ Content-Type: application/json
     "photos": []
 }
 ```
+### Get user - GET
+
+Get user by unique id
+
+`/users/<user_id>`
+
+**Request**
+
+```
+GET /users/<user_id> HTTP/1.1
+```
+
+**Response**
+
+```
+HTTP/1.1 200 Ok
+Content-Type: application/json
+
+{
+	"id": 5707702298738688,
+	"photos": [
+		6207356513812480
+	],
+	"created": "2015-02-04T10:08:35Z",
+	"name": "Tim Castelijns",
+	"device_id": "fe161d7d6c2521312e840ce57a5b77"
+}
+```
 ### Create news item - GET
 
 Create a new news item.
