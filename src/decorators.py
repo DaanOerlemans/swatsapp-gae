@@ -43,7 +43,8 @@ def accepts(f, *args, **kwargs):
     """
     def wrapper(*function_args, **function_kwargs):
         selfy = function_args[0]
-
+        print args
+        print selfy.request.headers['Content-Type']
         if not selfy.request.headers['Content-Type'] in args:
             selfy.response.set_status(httplib.UNSUPPORTED_MEDIA_TYPE)
             selfy.response.headers[str('Content-Type')] = (str('application/json'))

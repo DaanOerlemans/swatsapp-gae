@@ -39,6 +39,16 @@ class UserHandler(webapp2.RequestHandler):
         config = self.app.config.load_config('sa', required_keys=services)
         self.user_service = config['user_service']
 
+    @returns('application/json')
+    def get(self, user_id):
+        try:
+            user = self.user_service.get_by_id(int(user_id))
+        except exc.NotFoundEntity:
+            return httplib.NOT_FOUND, {
+                'error': 'User {} not found'.format(user_id)
+            }
+        return httplib.OK, convert_utils.user_to_dict(user)
+
 
 class UsersHandler(UserHandler):
     """
@@ -241,7 +251,7 @@ class PhotoHandler(blobstore_handlers.BlobstoreUploadHandler):
             photo = self.photo_service.get_by_id(int(photo_id))
         except exc.NotFoundEntity:
             return httplib.NOT_FOUND, {
-                'error': 'There already is an account for this device_id {}'.format(photo_id)
+                'error': 'No photo found with id {}'.format(photo_id)
             }
         self.response.headers[str('Content-Type')] = str('image/jpeg')
         self.response.out.write(photo.image)
@@ -273,7 +283,7 @@ class PhotosHandler(PhotoHandler):
             user = self.user_service.get_by_id(int(user_id))
         except exc.NotFoundEntity:
             return httplib.NOT_FOUND, {
-                'error': 'There already is an account for this device_id {}'.format(user_id)
+                'error': 'No User found with id {}'.format(user_id)
                 }
         # if not user:
         #     return (httplib.NOT_FOUND, {

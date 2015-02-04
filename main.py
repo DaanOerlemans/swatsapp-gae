@@ -13,6 +13,7 @@ from src.dal import repositories
 
 # Overriding default routes.
 handlers = [
+    (api_urls.USER, handlers.UserHandler),
     (api_urls.USERS, handlers.UsersHandler),
     (api_urls.PHOTO, handlers.PhotoHandler),
     (api_urls.PHOTOS, handlers.PhotosHandler),
